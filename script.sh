@@ -35,14 +35,38 @@ function CREATE_OUT_DIR()
             read PATH
             mkdir "$PATH/MegaScannerOutput"
             echo "Output directory created in $PATH/MegaScannerOutput"
-            sleep 1
+           
             ;;
         *) 
           echo "Invalid option."
           CREATE_OUT_DIR
           ;;
     esac
-    CHECK_TOOLS
+    RESET_DEV_ENVIORMENT
+    #CHECK_TOOLS 
+}
+
+function RESET_DEV_ENVIORMENT()
+{
+    echo "Do u want to reset development enviprment? (THIS WILL DELETE ANY OUTPUT CREATED BY THE SCRIPT)"
+    read CHOICE 
+    case $CHOICE in 
+    "y")
+       echo "DELITING ALL PROJECT OUTPUT"
+       sudo rm -rf MegaScannerOutput
+       echo "Complete!"
+       exit
+       ;;
+    "n")
+       echo "Exiting..."
+       exit
+       ;;
+    *)
+      echo "Invalid Input"
+      RESET_DEV_ENVIORMENT
+      ;;
+    
+    esac
 }
 
 CHECK_ROOT
