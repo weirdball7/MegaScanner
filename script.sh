@@ -51,35 +51,42 @@ function CREATE_OUT_DIR()
 
 function CHECK_TOOLS()
 {
+    TOOLS=("nmap" "hydra" "medusa" "metasploit-framework")
+
+    echo "Updating apt ..."
+    sudo apt upgrade -y 
+    sudo apt update 
+    
     echo "Checking for tools ..."
-    if ! command -v nmap > /dev/null; then
-        echo "[*] nmap not found ... installing [*]"
-        sudo apt install nmap -y 
-    else 
-        echo "[*] nmap found! ... continuing....[*]"
-    fi
+    for ITEM in "${TOOLS[@]}"; do
+        if ! command -v "$ITEM" >/dev/null; then
+            echo "[*] $ITEM not found ... installing [*]"
+            sudo apt install "$ITEM" -y
+        else
+            echo "[*] $ITEM found! ... continuing....[*]"
+        fi
+    done
+    # if ! command -v hydra > /dev/null; then
+    #     echo "[*] hydra not found ... installing [*]"
+    #     sudo apt install hydra -y 
+    # else 
+    #     echo "[*] hydra found! ... continuing....[*]"
+    # fi
 
-    if ! command -v hydra > /dev/null; then
-        echo "[*] hydra not found ... installing [*]"
-        sudo apt install hydra -y 
-    else 
-        echo "[*] hydra found! ... continuing....[*]"
-    fi
+    # if ! command -v medusa > /dev/null; then
+    #     echo "[*] medusa not found ... installing [*]"
+    #     sudo apt install medusa -y 
+    # else 
 
-    if ! command -v medusa > /dev/null; then
-        echo "[*] medusa not found ... installing [*]"
-        sudo apt install medusa -y 
-    else 
+    #     echo "[*] medusa found! ... continuing....[*]"
+    # fi 
 
-        echo "[*] medusa found! ... continuing....[*]"
-    fi 
-
-    if ! command -v searchsploit > /dev/null; then
-        echo "[*] searchsploit not found ... installing [*]"
-        sudo apt install searchsploit -y 
-    else 
-        echo "[*] searchsploit found! ... continuing....[*]"
-    fi
+    # if ! command -v searchsploit > /dev/null; then
+    #     echo "[*] searchsploit not found ... installing [*]"
+    #     sudo apt install searchsploit -y 
+    # else 
+    #     echo "[*] searchsploit found! ... continuing....[*]"
+    # fi
 
     GET_IP
 }   
