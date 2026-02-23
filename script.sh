@@ -46,14 +46,44 @@ function CREATE_OUT_DIR()
           CREATE_OUT_DIR
           ;;
     esac
-    # CHECK_TOOLS 
-    GET_IP
+    CHECK_TOOLS 
 }
 
-# function CHECK_TOOLS()
-# {
+function CHECK_TOOLS()
+{
+    echo "Checking for tools ..."
+    if ! command -v nmap > /dev/null; then
+        echo "[*] nmap not found ... installing [*]"
+        sudo apt install nmap -y 
+    else 
+        echo "[*] nmap found! ... continuing....[*]"
+    fi
 
-# }
+    if ! command -v hydra > /dev/null; then
+        echo "[*] hydra not found ... installing [*]"
+        sudo apt install hydra -y 
+    else 
+        echo "[*] hydra found! ... continuing....[*]"
+    fi
+
+    if ! command -v medusa > /dev/null; then
+        echo "[*] medusa not found ... installing [*]"
+        sudo apt install medusa -y 
+    else 
+
+        echo "[*] medusa found! ... continuing....[*]"
+    fi 
+
+    if ! command -v searchsploit > /dev/null; then
+        echo "[*] searchsploit not found ... installing [*]"
+        sudo apt install searchsploit -y 
+    else 
+        echo "[*] searchsploit found! ... continuing....[*]"
+    fi
+
+    GET_IP
+}   
+
 
 function GET_IP() 
 {
@@ -61,7 +91,7 @@ function GET_IP()
   read -r IP_ADDR
   echo "Target IP: $IP_ADDR"
 #   CHECK_IP
-    RESET_DEV_ENVIORMENT
+  RESET_DEV_ENVIORMENT
 }
 
 # function CHECK_IP() 
