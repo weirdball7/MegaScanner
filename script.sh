@@ -1,5 +1,6 @@
 #!/bin/bash 
-
+IP_ADDR=""
+OUTPUT_DIR=""
 # This function checks that the user running the script is root
 function CHECK_ROOT()
 {
@@ -26,35 +27,63 @@ function CREATE_OUT_DIR()
     case $CHOICE in 
         "1")
             HOME=$(pwd)
-            mkdir "$HOME/MegaScannerOutput"
-            echo "Output directory created in $HOME/MegaScannerOutput"
+            OUTPUT_DIR="$HOME/MegaScannerOutput"
+            mkdir -p "$OUTPUT_DIR"
+            cd "$OUTPUT_DIR"
+            echo "Output directory created in $(pwd)"
             sleep 1
             ;;
         "2")
             echo "Please provide a path for output directory."
-            read PATH
-            mkdir "$PATH/MegaScannerOutput"
-            echo "Output directory created in $PATH/MegaScannerOutput"
-           
+            read USER_PATH
+            OUTPUT_DIR="$USER_PATH/MegaScannerOutput"
+            mkdir -p "$OUTPUT_DIR"
+            cd "$OUTPUT_DIR"
+            echo "Output directory created in $(pwd)"
             ;;
         *) 
           echo "Invalid option."
           CREATE_OUT_DIR
           ;;
     esac
-    RESET_DEV_ENVIORMENT
-    #CHECK_TOOLS 
+    # CHECK_TOOLS 
+    GET_IP
 }
+
+# function CHECK_TOOLS()
+# {
+
+# }
+
+function GET_IP() 
+{
+  echo "Please provide a network address to scan ..."
+  read -r IP_ADDR
+  echo "Target IP: $IP_ADDR"
+#   CHECK_IP
+    RESET_DEV_ENVIORMENT
+}
+
+# function CHECK_IP() 
+# {
+
+# }
+
 
 function RESET_DEV_ENVIORMENT()
 {
-    echo "Do u want to reset development enviprment? (THIS WILL DELETE ANY OUTPUT CREATED BY THE SCRIPT)"
+    echo "Do u want to reset development enviorment? (THIS WILL DELETE ANY OUTPUT CREATED BY THE SCRIPT)"
     read CHOICE 
-    case $CHOICE in 
-    "y")
-       echo "DELITING ALL PROJECT OUTPUT"
-       sudo rm -rf MegaScannerOutput
-       echo "Complete!"
+    case $CHOICE in   
+    "y") 
+       echo "DELETING ALL PROJECT OUTPUT"
+       if [ -n "$OUTPUT_DIR" ]; then
+           cd "$OUTPUT_DIR/.." 2>/dev/null || cd /
+           sudo rm -rf "$OUTPUT_DIR"
+           echo "Complete!"
+       else
+           echo "No output directory recorded; nothing deleted."
+       fi
        exit
        ;;
     "n")
@@ -66,7 +95,9 @@ function RESET_DEV_ENVIORMENT()
       RESET_DEV_ENVIORMENT
       ;;
     
-    esac
+    esac 
 }
+
+
 
 CHECK_ROOT
