@@ -51,42 +51,35 @@ function CREATE_OUT_DIR()
 
 function CHECK_TOOLS()
 {
-    TOOLS=("nmap" "hydra" "medusa" "metasploit-framework")
+    TOOLS=("nmap" "hydra" "medusa" "exploitdb")
 
     echo "Updating apt ..."
-    sudo apt upgrade -y 
     sudo apt update 
-    
+    sudo apt upgrade -y 
+
     echo "Checking for tools ..."
     for ITEM in "${TOOLS[@]}"; do
-        if ! command -v "$ITEM" >/dev/null; then
-            echo "[*] $ITEM not found ... installing [*]"
-            sudo apt install "$ITEM" -y
+        if [ "$ITEM" = "exploitdb" ]; then
+            
+            if ! command -v searchsploit >/dev/null; then
+                echo "[*] searchsploit not found ... installing [*]"
+                sleep 2
+                sudo apt install "$ITEM" -y
+            else
+                echo "[*] searchsploit found! ... continuing....[*]"
+                sleep 2
+            fi
         else
-            echo "[*] $ITEM found! ... continuing....[*]"
+            if ! command -v "$ITEM" >/dev/null; then
+                echo "[*] $ITEM not found ... installing [*]"
+                sleep 2
+                sudo apt install "$ITEM" -y
+            else
+                echo "[*] $ITEM found! ... continuing....[*]"
+                sleep 2
+            fi
         fi
     done
-    # if ! command -v hydra > /dev/null; then
-    #     echo "[*] hydra not found ... installing [*]"
-    #     sudo apt install hydra -y 
-    # else 
-    #     echo "[*] hydra found! ... continuing....[*]"
-    # fi
-
-    # if ! command -v medusa > /dev/null; then
-    #     echo "[*] medusa not found ... installing [*]"
-    #     sudo apt install medusa -y 
-    # else 
-
-    #     echo "[*] medusa found! ... continuing....[*]"
-    # fi 
-
-    # if ! command -v searchsploit > /dev/null; then
-    #     echo "[*] searchsploit not found ... installing [*]"
-    #     sudo apt install searchsploit -y 
-    # else 
-    #     echo "[*] searchsploit found! ... continuing....[*]"
-    # fi
 
     GET_IP
 }   
@@ -103,7 +96,7 @@ function GET_IP()
 
 # function CHECK_IP() 
 # {
-
+    
 # }
 
 
