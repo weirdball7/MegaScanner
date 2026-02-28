@@ -85,19 +85,43 @@ function CHECK_TOOLS()
 }   
 
 
-function GET_IP() 
-{
-  echo "Please provide a network address to scan ..."
-  read -r IP_ADDR
-  echo "Target IP: $IP_ADDR"
-#   CHECK_IP
-  RESET_DEV_ENVIORMENT
+CHECK_IP() {
+  local ip="$1"
+
+  # validate format
+  if [[ ! "$ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    return 1
+  fi
+
+  # validate range 0-255
+  local a b c d
+  IFS='.' read -r a b c d <<< "$ip"
+  for octet in "$a" "$b" "$c" "$d"; do
+    # ensure it's a number and within range
+    if [[ ! "$octet" =~ ^[0-9]+$ ]] || (( octet < 0 || octet > 255 )); then
+      return 1
+    fi
+  done
+
+  return 0
 }
 
-# function CHECK_IP() 
-# {
-    
-# }
+GET_IP() {
+  while true; do
+    echo "Please provide a network address to scan ..."
+    read -r IP_ADDR
+
+    if CHECK_IP "$IP_ADDR"; then
+      echo "Target IP: $IP_ADDR"
+      break
+    else
+      echo "Invalid IP address format, try again."
+    fi
+  done
+
+  # אם אתה צריך לאפס סביבה - תעשה את זה פה אחרי שקיבלנו IP תקין
+  RESET_DEV_ENVIORMENT
+}
 
 
 function RESET_DEV_ENVIORMENT()
